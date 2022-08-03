@@ -6,7 +6,8 @@
 
 name: Integrate to main branch
 
-on: # yamllint disable-line rule:truthy
+# Trigger on pull requests against main branch
+on:
   pull_request: null
   push:
     branches:
@@ -35,7 +36,7 @@ jobs:
       # Execute Hadolint on modified Dockerfiles
       - name: Lint modified Dockerfile(s)
         run: |
-        for dockerfilePath in $(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} ${{ github.event.before }} | grep "Dockerfile");
+          for dockerfilePath in $(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} ${{ github.event.before }} | grep "Dockerfile");
           do
             folder=${dockerfilePath%"/Dockerfile"}
             #hadolint $folder/Dockerfile
