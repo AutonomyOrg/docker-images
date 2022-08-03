@@ -45,8 +45,8 @@ jobs:
 #            hadolint $dockerfilePath
 #          done;
 
-    - name: Lint Dockerfiles recursively
-      uses: hadolint/hadolint-action@v2.0.0
-      with:
-        recursive: true
-        dockerfile: Dockerfile
+      - name: Lint Dockerfiles recursively
+        uses: hadolint/hadolint-action@v2.0.0
+        with:
+          recursive: true
+          dockerfile: Dockerfile
