@@ -21,7 +21,7 @@ jobs:
   # Job used to check coding's best practices
   coding-standards:
     name: Check coding standards
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
       # Checkout repository with full history (not only the latest commit)
