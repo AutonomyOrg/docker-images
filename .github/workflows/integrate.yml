@@ -7,10 +7,9 @@
 name: Integrate to main branch
 
 on:
-  # Triggered on pull requests against main branch
+  # Triggered on pull requests
   pull_request:
-    branches:
-      - main
+    types: [ opened, edited, synchronize, reopened ]
 
   # Triggered on pushes to main branch
   push:
