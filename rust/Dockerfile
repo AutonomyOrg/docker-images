@@ -1,5 +1,5 @@
 
-FROM ubuntu-latest
+FROM ubuntu:18.04
 
 # Docker image metadata
 LABEL org.opencontainers.image.title="Rust"

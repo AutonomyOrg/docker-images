@@ -1,5 +1,5 @@
 
-FROM ubuntu-latest
+FROM ubuntu:18.04
 
 # Docker image metadata
 LABEL org.opencontainers.image.title="LateX"
@@ -8,8 +8,8 @@ LABEL org.opencontainers.image.source="https://github.com/AutonomyOrg/docker-ima
 LABEL org.opencontainers.image.license=Apache-2.0
 
 # Installing basic dependencies
-RUN apt update \
- && apt -y install --no-install-recommends \
+RUN apt-get update \
+ && apt-get -y install --no-install-recommends \
     biber \
     cm-super curl \
     git \
@@ -43,7 +43,7 @@ RUN apt update \
  && rm -rf /var/lib/apt/lists/*
 
 # Install additional fonts
-RUN wget https://www.tug.org/fonts/getnonfreefonts/install-getnonfreefonts \
+RUN wget --progress=dot:giga https://www.tug.org/fonts/getnonfreefonts/install-getnonfreefonts \
  && texlua install-getnonfreefonts \
  && rm -rf install-getnonfreefonts
  
