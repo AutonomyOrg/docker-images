@@ -21,7 +21,7 @@ jobs:
   # Job used to check coding's best practices
   coding-standards:
     name: Check coding standards
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       # Checkout repository with full history (not only the latest commit)
@@ -32,7 +32,7 @@ jobs:
           set-safe-directory: true
 
       # Install Hadolint package
-      - name: Download and install Hadolint executable
+      - name: Install Hadolint executable
         run: |
           sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64
           sudo chmod 755 /bin/hadolint
