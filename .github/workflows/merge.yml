@@ -1,6 +1,7 @@
 name: Merge to main branch
 
-on: # yamllint disable-line rule:truthy
+# Triggered after the successful execution of the integration workflow
+on:
   workflow_run:
     types:
       - completed
@@ -10,7 +11,7 @@ on: # yamllint disable-line rule:truthy
 
 jobs:
   merge:
-    name: "Merge"
+    name: "Merge modifications"
 
     runs-on: "ubuntu-latest"
 

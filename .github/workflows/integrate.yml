@@ -6,12 +6,15 @@
 
 name: Integrate to main branch
 
-# Trigger on pull requests against main branch
+# Triggered on pull requests or pushes against main branch
 on:
-  pull_request: null
+  pull_request:
+    branches:
+      - main
+
   push:
     branches:
-      - "main"
+      - main
 
 jobs:
   # Job used to check coding's best practices
