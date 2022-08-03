@@ -1,0 +1,43 @@
+# This Github Actions script is triggered when new modifications are pushed to
+# main branch. It aims at checking Dockerfile, so that to be sure best practices
+# for Docker image engineering are applied.
+#
+# See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+
+name: Integrate to main branch
+
+on: # yamllint disable-line rule:truthy
+  pull_request: null
+  push:
+    branches:
+      - "main"
+
+jobs:
+  # Job used to check coding's best practices
+  coding-standards:
+    name: Check coding standards
+    runs-on: ubuntu-last
+
+    steps:
+      # Checkout repository with full history (not only the latest commit)
+      - name: Set up repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          set-safe-directory: true
+
+      # Install Hadolint package
+      - name: Download and install Hadolint executable
+        run: |
+          sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64
+          chmod 755 /bin/hadolint
+
+      # Execute Hadolint on modified Dockerfiles
+      - name: Lint modified Dockerfile(s)
+        run: |
+        for dockerfilePath in $(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} ${{ github.event.before }} | grep "Dockerfile");
+          do
+            folder=${dockerfilePath%"/Dockerfile"}
+            #hadolint $folder/Dockerfile
+            echo "Lint Dockerfile: $folder/Dockerfile"
+          done;
