@@ -40,9 +40,7 @@ jobs:
       # Execute Hadolint on modified Dockerfiles
       - name: Lint modified Dockerfile(s)
         run: |
-          for dockerfilePath in $(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} ${{ github.event.before }} | grep "Dockerfile");
-          do
-            folder=${dockerfilePath%"/Dockerfile"}
-            #hadolint $folder/Dockerfile
-            echo -e "Lint Dockerfile: $folder/Dockerfile"
+          for dockerfilePath in $(find . -name Dockerfile); do
+          done;
+            echo -e "Lint Dockerfile: $dockerfilePath"
           done;
