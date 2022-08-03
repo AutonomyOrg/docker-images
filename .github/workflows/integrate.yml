@@ -28,23 +28,9 @@ jobs:
       - name: Set up repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
           set-safe-directory: true
 
-      # Install Hadolint package
-#      - name: Install Hadolint executable
-#        run: |
-#          sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64
-#          sudo chmod 755 /bin/hadolint
-
-      # Execute Hadolint on modified Dockerfiles
-#      - name: Lint modified Dockerfile(s)
-#        run: |
-#          for dockerfilePath in $(find . -name Dockerfile); do
-#            echo "Linting $dockerfilePath"
-#            hadolint $dockerfilePath
-#          done;
-
+      # Lint Dockerfile
       - name: Lint Dockerfiles recursively
         uses: hadolint/hadolint-action@v2.0.0
         with:
