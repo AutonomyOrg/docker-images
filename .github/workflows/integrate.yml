@@ -41,6 +41,5 @@ jobs:
       - name: Lint modified Dockerfile(s)
         run: |
           for dockerfilePath in $(find . -name Dockerfile); do
-          done;
             echo -e "Lint Dockerfile: $dockerfilePath"
           done;
