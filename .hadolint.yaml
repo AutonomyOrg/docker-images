@@ -3,4 +3,5 @@
 # configure ignore rules
 # see https://github.com/hadolint/hadolint#rules for a list of available rules.
 ignored:
-  - DL3008     # Pin versions in apt-get install (i.e. apt-get insall <package>=<version>)
+  - DL3008      # warning: Pin versions in apt-get install (i.e. apt-get insall <package>=<version>)
+  - DL4001      # warning: Either use Wget or Curl but not both
