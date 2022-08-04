@@ -1,0 +1,32 @@
+name: Check coding standards
+
+on:
+  # Execute this script on pull request against the main branch
+  pull-request: [ opened, edited, synchronize ]
+    branches:
+      - main
+
+  # Launch this workflow on push to main or feature branches
+  push:
+    branches:
+      - main
+      - 'feature/**'
+
+jobs:
+
+  # Lint Dockerfiles
+  lint-dockerfiles:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up repository
+        uses: actions/checkout@v3
+        with:
+          set-safe-directory: true
+
+      - name: Run Hadolint 
+        uses: hadolint/hadolint-action@v2.0.0
+        with:
+          config: ./.hadolint.yaml
+          recursive: true
+          dockerfile: Dockerfile
