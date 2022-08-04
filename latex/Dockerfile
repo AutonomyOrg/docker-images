@@ -38,8 +38,8 @@ RUN apt-get update \
     texlive-pictures \
     xindy \
     xindy-rules \
- && apt autoremove -y \
- && apt clean -y \
+ && apt-get autoremove -y \
+ && apt-get clean -y \
  && rm -rf /var/lib/apt/lists/*
 
 # Install additional fonts
