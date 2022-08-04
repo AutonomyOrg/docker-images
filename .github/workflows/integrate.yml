@@ -34,6 +34,6 @@ jobs:
       - name: Lint Dockerfiles recursively
         uses: hadolint/hadolint-action@v2.0.0
         with:
+          config: ./.hadolint.yaml
           recursive: true
           dockerfile: Dockerfile
-          ignore: [ "DL3008" ]

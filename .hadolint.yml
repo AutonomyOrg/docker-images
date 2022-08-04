@@ -1,7 +1,0 @@
-# Hadolint configuration file
-
-# configure ignore rules
-# see https://github.com/hadolint/hadolint#rules for a list of available rules.
-ignored: [
-  DL3008,      # Pin versions in apt-get install.
-]
