@@ -5,3 +5,4 @@
 ignored:
   - DL3008      # warning: Pin versions in apt-get install (i.e. apt-get insall <package>=<version>)
   - DL4001      # warning: Either use Wget or Curl but not both
+  - DL4006      # warning: Set the SHELL option -o pipefail before RUN with a pipe in it
