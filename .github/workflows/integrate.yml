@@ -36,3 +36,6 @@ jobs:
         with:
           recursive: true
           dockerfile: Dockerfile
+          ignore: [
+            DL3008
+          ]
