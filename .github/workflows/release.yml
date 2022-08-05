@@ -20,7 +20,7 @@ jobs:
 
     # Return a list of <image,version> tuples
     outputs:
-      images: []
+      images: ${{steps.images.outputs.list}}
 
     steps:
       # Checkout repository
@@ -32,9 +32,10 @@ jobs:
 
       # List all VERSION files that were updated
       - name: List all updated VERSION files
+        id: images
         run: |
           # Clear output array of images
-          images=()
+          outputList=""
 
           for versionFilePath in $(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} ${{ github.event.before }} | grep "VERSION");
           do
@@ -46,8 +47,11 @@ jobs:
 
             echo "Update Docker image ${IMAGE_NAME} to version ${IMAGE_VERSION}"
             
-            images+="${IMAGE_NAME}:${IMAGE_VERSION}"
-          done;       
+            outputList+="${IMAGE_NAME}:${IMAGE_VERSION}\n"
+          done;
+
+          # Set job step's output parameter value
+          echo "::set-output name list::${outputList}"
 
 
   build-and-publish:
