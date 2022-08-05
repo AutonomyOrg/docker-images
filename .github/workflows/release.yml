@@ -47,11 +47,11 @@ jobs:
 
             echo "Update Docker image ${IMAGE_NAME} to version ${IMAGE_VERSION}"
             
-            outputList+="${IMAGE_NAME}:${IMAGE_VERSION}\n"
+            outputList+="${IMAGE_NAME}:${IMAGE_VERSION},"
           done;
 
-          # Set job step's output parameter value
-          echo "::set-output name list::${outputList}"
+          # Set job step's output parameter value (deleting trailing comma)
+          echo "::set-output name list::\"${outputList%?}\""
 
 
   build-and-publish:
