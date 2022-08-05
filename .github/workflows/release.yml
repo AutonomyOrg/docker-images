@@ -1,6 +1,6 @@
 # Credits: https://www.learncloudnative.com/blog/2020-02-20-github-action-build-push-docker-images
 
-name: Build and publish Docker image
+name: Build and publish updated Docker images
 
 on:
   # Execute this script only if any of the VERSION files was updated
@@ -42,7 +42,7 @@ jobs:
             imageFolder=${versionFilePath%"/VERSION"}
             IMAGE_NAME=${imageFolder##*/}
 
-            # Get latest image version number
+            # Get latest image version number from latest line in VERSION file
             IMAGE_VERSION=$(tail -n 1 $versionFilePath)
 
             echo "Update Docker image ${IMAGE_NAME} to version ${IMAGE_VERSION}"
@@ -51,10 +51,10 @@ jobs:
           done;
 
           # Set job step's output parameter value (deleting trailing comma)
-          echo "::set-output name list::\"${outputList%?}\""
+          echo "::set-output name=list::\"${outputList%?}\""
 
 
-  build-and-publish:
+  build-and-publish-images:
     runs-on: ubuntu-latest
 
     steps:
