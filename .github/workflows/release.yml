@@ -26,25 +26,27 @@ jobs:
   list-updated-images:
     runs-on: ubuntu-latest
 
-    # Return a list of <image,version> tuples
+    # Build a dynamic matrix containing a list of <image:version> tuples
     outputs:
-      images: ${{steps.images.outputs.list}}
+      images: ${{steps.list-updated-images.outputs.images}}
 
     steps:
+
       # Checkout repository
       - name: Set up repository
         uses: actions/checkout@v3
         with:
           set-safe-directory: true
-          fetch-depth: 0            # fetch all history, and not only the latest commit
+          fetch-depth: 0            # fetch all history and not only the latest commit
 
-      # List all VERSION files that were updated
-      - name: List all updated VERSION files
-        id: images
+      # List all VERSION files that were updated and build the output matrix dynamically
+      - name: Enumerate all updated VERSION files
+        id: list-updated-images
         run: |
-          # Clear output array of images
-          outputList=""
+          # Initialize output string containing updated images
+          images=""
 
+          # Find all VERSION files that were modified between last and current commits
           for versionFilePath in $(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} ${{ github.event.before }} | grep "VERSION");
           do
             imageFolder=${versionFilePath%"/VERSION"}
@@ -53,24 +55,25 @@ jobs:
             # Get latest image version number from latest line in VERSION file
             IMAGE_VERSION=$(tail -n 1 $versionFilePath)
 
-            echo "Update Docker image ${IMAGE_NAME} to version ${IMAGE_VERSION}"
+            echo "Update Docker image '${IMAGE_NAME}' to version '${IMAGE_VERSION}'"
             
-            outputList+="${IMAGE_NAME}:${IMAGE_VERSION},"
+            images+="${IMAGE_NAME}:${IMAGE_VERSION},"
           done;
 
-          # Set job step's output parameter value (deleting trailing comma)
-          echo "::set-output name=list::\"${outputList%?}\""
+          # Set job step's output value (deleting trailing comma)
+          echo "::set-output name=images::\"${images%?}\""
 
 
-  build-and-publish-images:
+  build-and-push-images:
     runs-on: ubuntu-latest
+
+    # Waiting for the list of updated Docker images to be built
+    needs: list-updated-images
 
     steps:
       # Checkout repository
       - name: Set up repository
         uses: actions/checkout@v3
-        with:
-          set-safe-directory: true
 
       # Setup Docker BuildKit Buildx image builder
       - name: Install Docker Buildx tool
@@ -100,13 +103,40 @@ jobs:
       #       type=semver,pattern={{major}}.{{minor}}         
 
       # Build Docker image using Docker Buildx and push it to Github Container Registry
-      - name: Build and push Docker image(s) to GitHub Container Registry
-        uses: docker/build-push-action@v3
-        with:
-          # Relative path to the place where source code with Dockerfile is located
-          context: ./.devcontainer
-          file: ./.devcontainer/Dockerfile
-          builder: ${{ steps.builder.outputs.name }}
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          push: ${{ github.event_name != 'pull_request' }}
+      # - name: Build and push Docker image(s) to GitHub Container Registry
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     # Relative path to the place where source code with Dockerfile is located
+      #     context: ./${{needs}}./.devcontainer
+      #     file: ./.devcontainer/Dockerfile
+      #     builder: ${{ steps.builder.outputs.name }}
+      #     tags: ghcr.io/${{ github.repository_owner }}/
+      #     push: ${{ github.event_name != 'pull_request' }}
+
+      # Build Docker image using Docker Buildx and push it to Github Container Registry
+      - name: Build and push Docker images to GitHub Container Registry
+        run: |
+          # Split the comma-separated list of updated images
+          IFS="," read -a updatedImages <<< ${needs.list-updated-images.outputs.images}
+
+          # Loop in the list of updated images and build each image
+          for image in ${updatedImages};
+          do
+            # Split image name and version (tuple format is <image:version>)
+            imageTag=(${image//:/ })
+            imageName=${imageTag[0]}
+            imageVersion=${imageTag[1]}
+            imageFolder="./${imageName}"
+            tempImageName="image-${RANDOM}"
+
+            echo "Build new Docker image ${image}"
+            docker build ${imageFolder} --file ${imageFolder}/Dockerfile --tag $tmpImageName
+            imageId="ghcr.io/${{ github.repository_owner }}/${imageName}"
+            
+            # Tag temporary image
+            docker tag $tempImageName ${imageId}:${imageVersion}
+
+            # Push tagged image to Github Container Registry
+            docker push ${imageId}:${imageVersion}
+          done;
+
