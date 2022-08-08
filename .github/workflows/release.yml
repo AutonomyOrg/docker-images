@@ -127,17 +127,17 @@ jobs:
             imageName=${imageTag[0]}
             imageVersion=${imageTag[1]}
             imageFolder="./${imageName}"
-            tmpImageName="image-$RANDOM"
+            tmpImageName="${imageName}:$RANDOM"
 
             echo "Build new Docker image ${image} with temporary name ${tmpImageName}"
             docker build ${imageFolder} --file ${imageFolder}/Dockerfile --tag ${tmpImageName}
-            imageId="ghcr.io/${{ github.repository_owner }}/${image}"
+            imageId="ghcr.io/${{ github.repository_owner }}/${imageName}"
             echo "Push new image ${imageId}"
             
             # Tag temporary image
-            docker tag ${tmpImageName} ${imageId}
+            docker tag ${tmpImageName} ${imageId}:${imageVersion}
 
             # Push tagged image to Github Container Registry
-            docker push ${imageId}
+            docker push ${imageId}:${imageVersion}
           done;
 
