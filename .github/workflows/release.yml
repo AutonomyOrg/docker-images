@@ -115,7 +115,7 @@ jobs:
             imageURL="ghcr.io/${repositoryName}/${imageTag}"
             
             # Tag temporary image
-            docker tag ${temporaryImageName} ${imageURL}:
+            docker tag ${temporaryImageName} ${imageURL}
 
             # Push tagged image to Github Container Registry
             docker push ${imageURL}
