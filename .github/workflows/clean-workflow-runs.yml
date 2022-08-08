@@ -1,0 +1,40 @@
+# Autonomy
+# Next-generation redistributive finance
+#
+# Handcrafted since 2022 by Autonomy Organisation <info@autonomy.org>
+#
+# This Github Actions script aims at purging workflow runs that are older than a 
+# given delay.
+#
+
+name: Clean up workflow runs"
+
+on: 
+  schedule:
+    #        ┌───────────── minute (0 - 59)
+    #        │  ┌───────────── hour (0 - 23)
+    #        │  │ ┌───────────── day of the month (1 - 31)
+    #        │  │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+    #        │  │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+    #        │  │ │ │ │
+    #        │  │ │ │ │
+    #        │  │ │ │ │
+    #        *  * * * *
+    - cron: '0 */2 * * *'
+
+env:
+  # Number of days after which a workflow run is deleted
+  DAYS_OLD: 10
+
+jobs:
+  cleanup-workflow-runs:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clean up workflow runs
+        uses: boredland/action-purge-workflow-runs@main
+        with:
+          day-old: "${{ env.DAYS_OLD }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
