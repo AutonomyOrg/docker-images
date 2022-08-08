@@ -1,3 +1,11 @@
+# Autonomy
+# Next-generation redistributive finance
+#
+# Handcrafted since 2022 by Autonomy Organisation <info@autonomy.org>
+#
+# This workflow aims at ensuring best coding practices, especially for
+# Dockerfiles.
+
 name: Check coding standards
 
 on:
