@@ -1,0 +1,53 @@
+# Autonomy
+# Next-generation redistributive finance
+#
+# Handcrafted since 2022 by Autonomy Organisation <info@autonomy.org>
+#
+# This Github Actions script aims at pruning pending issues and pull requests.
+#
+# Credits: 
+
+name: Clean up inactive issues and pull requests
+
+on: 
+  schedule:
+    #        ┌───────────── minute (0 - 59)
+    #        │  ┌───────────── hour (0 - 23)
+    #        │  │ ┌───────────── day of the month (1 - 31)
+    #        │  │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+    #        │  │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+    #        │  │ │ │ │
+    #        │  │ │ │ │
+    #        │  │ │ │ │
+    #        *  * * * *
+    - cron: "0 12 * * *"
+
+env:
+  DAYS_BEFORE_CLOSE: 14
+  DAYS_BEFORE_STALE: 180
+
+permissions:
+  issues: write
+  pull-requests: write
+  
+jobs:
+  prune-issues-and-pull-requests:
+    name: "Issues"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Prune issues and pull requests"
+        uses: "actions/stale@v5"
+        with:
+          days-before-close: "${{ env.DAYS_BEFORE_CLOSE }}"
+          days-before-stale: "${{ env.DAYS_BEFORE_STALE }}"
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          stale-issue-label: "stale"
+          stale-issue-message: |
+            Since this issue has not had any activity within the last ${{ env.DAYS_BEFORE_STALE }} days, it is now considered as stale.
+            If no further activity occurs within the next ${{ env.DAYS_BEFORE_CLOSE }} days, this stale issue will be removed.
+          stale-pr-label: "stale"
+          stale-pr-message: |
+            Since this pull request (PR) had no activity within the last ${{ env.DAYS_BEFORE_STALE }} days, it is now marked as stale.
+            If no further activity occurs within the next ${{ env.DAYS_BEFORE_CLOSE }} days, this PR will be closed.
