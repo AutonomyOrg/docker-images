@@ -135,9 +135,9 @@ jobs:
             echo "Push new image ${imageId}"
             
             # Tag temporary image
-            docker tag $tempImageName ${imageId}:${imageVersion}
+            docker tag ${tmpImageName} ${imageId}
 
             # Push tagged image to Github Container Registry
-            docker push ${imageId}:${imageVersion}
+            docker push ${imageId}
           done;
 
