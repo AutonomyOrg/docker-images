@@ -95,27 +95,31 @@ jobs:
           IFS="," read -a updatedImages <<< ${{needs.list-updated-images.outputs.images}}
 
           # Loop in the list of updated images and build each image
-          for image in $updatedImages;
+          for imageTag in $updatedImages;
           do
-            # Split image name and version (tuple format is <image:version>)
-            imageTag=(${image//:/ })
-            imageName=${imageTag[0]}
-            imageVersion=${imageTag[1]}
+            # Split image tag into its name and version components (format is <image:version>)
+            image=(${imageTag//:/ })
+            imageName=${image[0]}
+            imageVersion=${image[1]}
             imageFolder="./${imageName}"
-            tmpImageName="${imageName}:$RANDOM"
 
-            docker build ${imageFolder} --file ${imageFolder}/Dockerfile --tag ${tmpImageName}
+            # Set temporary image name
+            temporaryImageName="${imageName}:$RANDOM"
+
+            # Build Docker image with temporary name
+            docker build ${imageFolder} --file ${imageFolder}/Dockerfile --tag ${temporaryImageName}
             
-            # Repository name must be lowercase
-            repositoryName = $(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')
-            imageId="ghcr.io/${repositoryName}/${imageName}"
+            # Be sure the repository name is lowercase
+            repositoryName=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')
+            
+            imageURL="ghcr.io/${repositoryName}/${imageTag}"
             
             # Tag temporary image
-            docker tag ${tmpImageName} ${imageId}:${imageVersion}
+            docker tag ${temporaryImageName} ${imageURL}:
 
             # Push tagged image to Github Container Registry
-            docker push ${imageId}:${imageVersion}
+            docker push ${imageURL}
 
-            echo "Build and push Docker image ${imageId}:${imageVersion}"
+            echo "Build and push Docker image ${imageURL}"
           done;
 
