@@ -10,7 +10,7 @@ on:
   # Launch this workflow on push to main or feature branches
   push:
     branches:
-      - main
+      - 'main'
       - 'feature/**'
 
 jobs:

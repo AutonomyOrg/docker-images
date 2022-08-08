@@ -13,6 +13,7 @@ RUN apt-get update \
     biber \
     cm-super curl \
     git \
+    wget \
     latexmk \
     locales \
     make \ 
