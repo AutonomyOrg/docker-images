@@ -117,17 +117,17 @@ jobs:
       - name: Build and push Docker images to GitHub Container Registry
         run: |
           # Split the comma-separated list of updated images
-          IFS="," read -a updatedImages <<< ${needs.list-updated-images.outputs.images}
+          IFS="," read -a updatedImages <<< ${{needs.list-updated-images.outputs.images}}
 
           # Loop in the list of updated images and build each image
-          for image in ${updatedImages};
+          for image in $updatedImages;
           do
             # Split image name and version (tuple format is <image:version>)
             imageTag=(${image//:/ })
             imageName=${imageTag[0]}
             imageVersion=${imageTag[1]}
             imageFolder="./${imageName}"
-            tempImageName="image-${RANDOM}"
+            tempImageName="image-$RANDOM"
 
             echo "Build new Docker image ${image}"
             docker build ${imageFolder} --file ${imageFolder}/Dockerfile --tag $tmpImageName
