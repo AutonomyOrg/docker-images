@@ -88,31 +88,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Set Docker image metadata
-      # - name: Extract Docker image metadata (i.e. tags and labels)
-      #   id: metadata
-      #   uses: docker/metadata-action@v4
-      #   with:
-      #     images: |
-      #       ghcr.io/${{ github.repository_owner }}/sandbox-latex
-      #     tags: |
-      #       latest
-      #       type=ref,event=branch
-      #       type=ref,event=pr
-      #       type=semver,pattern={{version}}
-      #       type=semver,pattern={{major}}.{{minor}}         
-
-      # Build Docker image using Docker Buildx and push it to Github Container Registry
-      # - name: Build and push Docker image(s) to GitHub Container Registry
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     # Relative path to the place where source code with Dockerfile is located
-      #     context: ./${{needs}}./.devcontainer
-      #     file: ./.devcontainer/Dockerfile
-      #     builder: ${{ steps.builder.outputs.name }}
-      #     tags: ghcr.io/${{ github.repository_owner }}/
-      #     push: ${{ github.event_name != 'pull_request' }}
-
       # Build Docker image using Docker Buildx and push it to Github Container Registry
       - name: Build and push Docker images to GitHub Container Registry
         run: |
@@ -129,10 +104,10 @@ jobs:
             imageFolder="./${imageName}"
             tmpImageName="${imageName}:$RANDOM"
 
-            echo "Build new Docker image ${image} with temporary name ${tmpImageName}"
+            echo "Build new Docker image ${image}"
+
             docker build ${imageFolder} --file ${imageFolder}/Dockerfile --tag ${tmpImageName}
             imageId="ghcr.io/${{ github.repository_owner }}/${imageName}"
-            echo "Push new image ${imageId}"
             
             # Tag temporary image
             docker tag ${tmpImageName} ${imageId}:${imageVersion}
