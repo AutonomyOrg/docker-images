@@ -3,19 +3,10 @@
 name: Build and publish updated Docker images
 
 on:
-  # Execute this workflow only code sanity check is successful
-  workflow_run:
-    types:
-      - 'completed'
-
-    workflows:
-      - 'Check coding standards'
-
   # Execute this script only if any of the VERSION files was updated
   push:
     branches:
       - 'main'
-      - 'feature/**'
 
     paths:
       - '**/VERSION'
