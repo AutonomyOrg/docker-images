@@ -71,9 +71,12 @@ jobs:
     needs: list-updated-images
 
     steps:
-      # Checkout repository
+      # Checkout repository (fetchin all history, not only the latest commit)
       - name: Set up repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false # use user's personal token rather than GITHUB_TOKEN
 
       # Setup Docker BuildKit Buildx image builder
       - name: Install Docker Buildx tool
@@ -89,7 +92,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Build Docker image using Docker Buildx and push it to Github Container Registry
-      - name: Build and push Docker images to GitHub Container Registry
+      - name: Build and publish Docker images
         run: |
           # Split the comma-separated list of updated images
           IFS="," read -a updatedImages <<< ${{needs.list-updated-images.outputs.images}}
@@ -122,4 +125,3 @@ jobs:
 
             echo "Build and push Docker image ${imageURL}"
           done;
-
