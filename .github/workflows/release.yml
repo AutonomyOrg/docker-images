@@ -97,6 +97,8 @@ jobs:
           # Split the comma-separated list of updated images
           IFS="," read -a updatedImages <<< ${{needs.list-updated-images.outputs.images}}
 
+          echo "Updated images: ${updatedImages[*]}"
+
           # Loop in the list of updated images and build each image
           for imageTag in $updatedImages;
           do
