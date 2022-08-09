@@ -8,7 +8,7 @@ This repository contains the following image:
 
 | Name | Description | Version |
 | ---- | ----------- | ------- |
-| [LaTeX](./latex) | LaTeX documents preparation toolbox | [0.1.3](./latex/VERSION) |
+| [LaTeX](./latex) | LaTeX documents preparation toolbox | [0.0.1](./latex/VERSION) |
 | [Rust](./rust) | Rust compiler tools | [1.62.1](./rust/VERSION)
 
 ## Versioning Mechanism
