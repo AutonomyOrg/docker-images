@@ -1,11 +1,14 @@
 
-FROM ubuntu:18.04
+FROM ghcr.io/autonomyorg/sandbox:0.0.1
 
 # Docker image metadata
 LABEL org.opencontainers.image.title="LateX"
-LABEL org.opencontainers.image.description="Toolbox for LaTeX documents compilation"
+LABEL org.opencontainers.image.description="LaTeX documents preparation sandbox"
 LABEL org.opencontainers.image.source="https://github.com/AutonomyOrg/docker-images/latex"
 LABEL org.opencontainers.image.license=Apache-2.0
+
+# Switch (momentarily) to root user (rather than using 'sudo' or 'gosu', for instance)
+USER root
 
 # Installing basic dependencies
 RUN apt-get update \
@@ -44,7 +47,7 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 # Install additional fonts
-RUN wget --progress=dot:giga https://www.tug.org/fonts/getnonfreefonts/install-getnonfreefonts \
+RUN curl https://www.tug.org/fonts/getnonfreefonts/install-getnonfreefonts --output install-getnonfreefonts  --silent \
  && texlua install-getnonfreefonts \
  && rm -rf install-getnonfreefonts
  
@@ -58,3 +61,6 @@ ENV LANGUAGE=en_US.UTF-8 LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 # Installing cpanm and missing latexindent dependencies
 RUN curl -L http://cpanmin.us | perl - --self-upgrade \
  && cpanm Log::Dispatch::File YAML::Tiny File::HomeDir Unicode::GCString
+
+# Switch back to default non-root user (which is 'sandbox', when using sandbox image as base image)
+USER sandbox
