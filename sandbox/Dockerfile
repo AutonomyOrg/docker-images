@@ -16,7 +16,7 @@ COPY scripts/*.sh /tmp/scripts/
 
 # Configure basic features
 RUN apt-get update \
- && apt-get install -y \
+ && apt-get install -y --no-install-recommends \
     sudo \
     # Create non-root user
     groupadd --gid $USER_GID $USER_NAME \
