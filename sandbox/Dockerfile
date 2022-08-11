@@ -19,17 +19,17 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     sudo \
     # Create non-root user
-    groupadd --gid $USER_GID $USER_NAME \
-    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USER_NAME \
+ && groupadd --gid $USER_GID $USER_NAME \
+ && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USER_NAME \
     # Add non-root user to sudo
-    && echo $USER_NAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER_NAME \
-    && chmod 0440 /etc/sudoers.d/$USER_NAME \
+ && echo $USER_NAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER_NAME \
+ && chmod 0440 /etc/sudoers.d/$USER_NAME \
     # Execute setup script
-    && bash /tmp/scripts/setup.sh "${USER_NAME}" "${USER_UID}" "${USER_GID}" \
+ && bash /tmp/scripts/setup.sh "${USER_NAME}" "${USER_UID}" "${USER_GID}" \
     # Clean up final image
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /tmp/scripts
+ && apt-get clean -y \
+ && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /tmp/scripts
 
 # Set default user to the non-root user
 USER $USER_NAME
