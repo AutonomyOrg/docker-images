@@ -10,7 +10,7 @@ This repository contains the following image:
 | ---- | ----------- | ------- |
 | [LaTeX](./latex) | LaTeX documents preparation toolbox | [0.0.2](./latex/VERSION) |
 | [Rust](./rust) | Rust compiler tools | [1.62.1](./rust/VERSION)
-| [Sandbox](./sandbox) | VSCode development sandbox's base image | [0.0.1](./sandbox/VERSION)
+| [Sandbox](./sandbox) | VSCode development sandbox's base image | [0.0.2](./sandbox/VERSION)
 
 ## Versioning Mechanism
 

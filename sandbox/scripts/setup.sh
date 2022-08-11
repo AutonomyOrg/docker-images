@@ -1,14 +1,16 @@
-# Usage: ./setup.sh [user_name] [user_id] [user_group_id]
+#!/bin/bash
+
+# Usage: ./setup.sh [user_name](default 'sandbox') [user_id](default '1000') [user_group_id](default '1000')
 
 set -e
 
 # Script input parameters
-USER_NAME=${1:-"vscode"}
+USER_NAME=${1:-"sandbox"}
 USER_UID=${2:-"1000"}
 USER_GID=${3:-"1000"}
 
 if [ "$(id -u)" -ne 0 ]; then
-    echo -e 'Script must be run as root. Use sudo, su, or add "USER root" to your Dockerfile before running this script.'
+    echo -e 'Script must be run as root. Use gosu, sudo, su, or add "USER root" (better) to your Dockerfile before running this script.'
     exit 1
 fi
 
